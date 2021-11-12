@@ -1,19 +1,17 @@
-async function signin(req, res)
-{
+async function signin(req, res) {
+}
+
+async function signup(req, res) {
+    const { v4: uuidv4 } = require('uuid');
+    console.log(uuidv4());
 
 }
 
-async function signup(req, res)
-{
+async function signout(req, res) {
 
 }
 
-async function signout(req, res)
-{
-    
-}
-
-module.exports ={
+module.exports = {
     signin,
     signup,
     signout
