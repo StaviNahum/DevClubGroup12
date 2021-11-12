@@ -5,6 +5,8 @@ const app = express();
 app.use(express.json());
 app.use(cors());
 
+
+
 app.get('/example', (req,res)=> {
     res.send('hi from the server')
 })
