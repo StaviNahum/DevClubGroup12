@@ -12,8 +12,7 @@ app.get('/example', (req, res) => {
     res.send('hi from the server')
 })
 
-const { v4: uuidv4 } = require('uuid');
-console.log(uuidv4());
+
 
 
 app.listen(8080, () => {
