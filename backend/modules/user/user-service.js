@@ -64,9 +64,10 @@ async function signin(username, password) {
             })
 
         })
-    
 
+
+    
         module.exports = {
             addUser,
-            getUser
+            signin
         }
