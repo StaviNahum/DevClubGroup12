@@ -35,7 +35,7 @@ function _getUser(username) {
 
 async function signin(username, password) {
     return new Promise((resolve, reject) => {
-         _getUser(username).then(result => {
+        _getUser(username).then(result => {
             bcrypt.compare(password, result.password, (err, res) => {
                 if (res) {
                     const token = jwt.sign(
@@ -48,25 +48,25 @@ async function signin(username, password) {
                             expiresIn: "1h"
                         }
                     );
-                    resolve( {
+                    resolve({
                         message: "Auth successful",
                         token: token
                     })
                 }
                 if (err) {
-                    reject( {
+                    reject({
                         message: "Auth failed"
                     })
                 }
 
-                reject({message: "Auth failed"})
-        
+                reject({ message: "Auth failed" })
+
             })
 
-    })
+        })
     
 
-module.exports = {
+        module.exports = {
             addUser,
             getUser
         }
