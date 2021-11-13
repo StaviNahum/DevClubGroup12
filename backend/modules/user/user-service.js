@@ -66,7 +66,6 @@ async function signin(username, password) {
                 }
                 reject({ message: "Auth failed" })
             })
-
         })
     })
 }
