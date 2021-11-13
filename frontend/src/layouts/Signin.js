@@ -7,21 +7,24 @@ const Signin = () => {
 
 
     return (
-        <form className="login" onSubmit={(e) => {
+        <form className="login" onSubmit={async (e) => {
             e.preventDefault();
             if (!username || !password) {
                 return alert("You must enter both a username and a password.");
             }
 
-            axios.get("http://localhost:8080/api/usersignin")
-            .then((res) => {
-                if (res.data[username]) {
-                    if (res.data[username].password === password) {
-                        //Redirect user to 
-
-                    } else alert("Invalid Password")
-                } else alert("Invalid Username.")
-            })
+            let userObject = {
+                username: username,
+                password: password
+            }
+            console.log(userObject);
+            const response = await axios.post("http://localhost:8080/api/usersignin", userObject);
+            if (response.status === 200) {
+                localStorage.setItem("token", response.data.token);
+                //props.history.push("/admin");
+            }
+            else return alert("The Username and Password entered are invalid. Please attempt again.");
+        
         }}>
         <h3>Sign In</h3>
 

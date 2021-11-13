@@ -7,16 +7,32 @@ import Signin from "layouts/Signin";
 
 export default function App() {
 
-  useEffect(() => {
-    axios
-      .get("http://localhost:8080/api/usersignin")
-      .then(({ data }) => console.log(data))
-      .catch(console.log);
-  }, [])
+  useEffect(async () => {
+    if (!localStorage.getItem("token")) return;
+    let token = localStorage.getItem("token");
+    // axios
+    //   .get("http://localhost:8080/api/usersignin")
+    //   .then(({ data }) => console.log(data))
+    //   .catch(console.log);
+
+    await axios.get("http://localhost:8080/api/usersignin", {
+      headers: 
+    { "Authorization": `Bearer ${token}` },
+    }).then((response) => {
+      let { status, data } = response;
+      if (status === 200) {
+        let userData = data;
+        return localStorage.setItem("userData", JSON.stringify(data));
+      }
+    })
+    }, []);
 
   return (
     <Router>
-        <Route path="/admin" component={Admin} />
+        <Route path="/admin" component={() => {
+          if (localStorage.getItem("token")) return <Admin />
+          else return <Redirect to="/"/>
+        }} />
         <Route exact path="/" component={Signup} />
         <Route exact path="/signin" component={Signin} />
         {/* <Redirect from="/" to="/admin/dashboard" /> */}
