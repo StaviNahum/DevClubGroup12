@@ -3,27 +3,33 @@ const { v4: uuidv4 } = require('uuid');
 const bcrypt = require('bcrypt')
 const gUsers = require('../../db/user.json')
 const jwt = require("jsonwebtoken");
+var path = require('path');
 
 
 const addUser = ({ firstname, lastname, username, password }) => {
     const _id = uuidv4()
-    if (!firstname || !lastname || !username || !password) return Promise.reject('All fields are required')
-    bcrypt.hash(password, 10, ((err, hash) => {
-        if (err) return Promise.reject(err)
-        const user = {
-            _id, firstname, lastname, username, hash
-        }
-        _addUserToDB(user);
-        return Promise.resolve(user)
-    }));
+    return new Promise((resolve, reject) => {
+        if (!firstname || !lastname || !username || !password) return reject('All fields are required')
+        const user = gUsers.find(u => u.username === username)
+        if (user) return reject('Username is in use')
+        bcrypt.hash(password, 10, ((err, hash) => {
+            if (err) return reject(err)
+            const user = {
+                _id, firstname, lastname, username, password: hash
+            }
+            gUsers.unshift(user)
+            _addUserToDB()
+            return resolve({ firstname, lastname, username })
+        }));
+    })
 }
 
 function _addUserToDB() {
-    fs.writeFileSync('../../db/user.json', JSON.stringify(gUsers, null, 2))
+    fs.writeFileSync(path.join(__dirname + '../../../db/user.json'), JSON.stringify(gUsers, null, 2))
 }
 
 function _getUser(username) {
-    const user = gUsers.find(u => u.id === username)
+    const user = gUsers.find(u => u.username === username)
     if (user) {
         return Promise.resolve(user);
     }
@@ -34,6 +40,7 @@ function _getUser(username) {
 }
 
 async function signin(username, password) {
+    console.log(gUsers);
     return new Promise((resolve, reject) => {
         _getUser(username).then(result => {
             bcrypt.compare(password, result.password, (err, res) => {
@@ -69,8 +76,8 @@ async function signin(username, password) {
 
 
 
-    
-        module.exports = {
-            addUser,
-            signin
-        }
+
+module.exports = {
+    addUser,
+    signin
+}
