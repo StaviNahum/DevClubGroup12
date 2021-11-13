@@ -39,7 +39,7 @@ function _getUser(username) {
     }
 }
 
-async function signin(username, password) {
+async function auth(username, password) {
     return new Promise((resolve, reject) => {
         _getUser(username).then(result => {
             bcrypt.compare(password, result.password, (err, res) => {
@@ -75,5 +75,5 @@ async function signin(username, password) {
 
 module.exports = {
     addUser,
-    signin
+    auth
 }

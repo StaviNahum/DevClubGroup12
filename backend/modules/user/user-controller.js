@@ -1,9 +1,9 @@
-const { addUser } = require("./user-service");
+const { addUser, auth } = require("./user-service");
 
 
 async function signin(req, res) {
     try {
-        const mess = await signin(req.body.username, req.body.password)
+        const mess = await auth(req.body.username, req.body.password)
         res.status(201).send(mess)
     }
     catch (err) {
