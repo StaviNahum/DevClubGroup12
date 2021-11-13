@@ -37,7 +37,11 @@ const Signup = () => {
             async function postDB(userInfo) {
                 await axios.post("http://localhost:8080/api/usersignin", userInfo)
                 .then((response) => {
-                    console.log(response);
+                    let { status, data } = response;
+                    if (status === 200) {
+                        localStorage.setItem("token", data.token);
+                        props.history.push("/admin");
+                    }
                 }).catch((err) => console.error(err));
             }
             
