@@ -1,24 +1,25 @@
 import React, { useEffect } from 'react';
-import { BrowserRouter, Route, Switch, Redirect } from "react-router-dom";
+import { BrowserRouter as Router, Route, Switch, Redirect } from "react-router-dom";
 import axios from 'axios';
 import Admin from "layouts/Admin.js";
-
+import Signup from "layouts/Signup";
+import Signin from "layouts/Signin";
 
 export default function App() {
 
   useEffect(() => {
     axios
-      .get('http://localhost:8080/example')
+      .get("http://localhost:8080/api/usersignin")
       .then(({ data }) => console.log(data))
       .catch(console.log);
   }, [])
 
   return (
-    <BrowserRouter>
-      <Switch>
+    <Router>
         <Route path="/admin" component={Admin} />
-        <Redirect from="/" to="/admin/dashboard" />
-      </Switch>
-    </BrowserRouter>
+        <Route exact path="/" component={Signup} />
+        <Route exact path="/signin" component={Signin} />
+        {/* <Redirect from="/" to="/admin/dashboard" /> */}
+    </Router>
   );
 }
