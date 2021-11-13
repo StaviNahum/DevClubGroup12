@@ -19,7 +19,7 @@ const addUser = ({ firstname, lastname, username, password }) => {
             }
             gUsers.unshift(user)
             _addUserToDB()
-            return resolve({ firstname, lastname, username })
+            return resolve(signin(username, password))
         }));
     })
 }
@@ -40,14 +40,13 @@ function _getUser(username) {
 }
 
 async function signin(username, password) {
-    console.log(gUsers);
     return new Promise((resolve, reject) => {
         _getUser(username).then(result => {
             bcrypt.compare(password, result.password, (err, res) => {
                 if (res) {
                     const token = jwt.sign(
                         {
-                            usernamr: result.username,
+                            username: result.username,
                             userId: result._id
                         },
                         process.env.JWT_KEY,
@@ -57,7 +56,7 @@ async function signin(username, password) {
                     );
                     resolve({
                         message: "Auth successful",
-                        token: token
+                        token
                     })
                 }
                 if (err) {
@@ -65,9 +64,7 @@ async function signin(username, password) {
                         message: "Auth failed"
                     })
                 }
-
                 reject({ message: "Auth failed" })
-
             })
 
         })

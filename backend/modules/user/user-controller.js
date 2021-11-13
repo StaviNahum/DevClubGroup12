@@ -17,7 +17,6 @@ async function signin(req, res) {
 async function signup(req, res) {
     try {
         const user = await addUser(req.body)
-        console.log(user);
         res.status(201).json(user)
     }
     catch (err) {
