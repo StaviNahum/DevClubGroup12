@@ -40,7 +40,7 @@ const Signup = () => {
                     let { status, data } = response;
                     if (status === 200) {
                         localStorage.setItem("token", data.token);
-                        props.history.push("/admin");
+                        //props.history.push("/admin");
                     }
                 }).catch((err) => console.error(err));
             }

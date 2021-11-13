@@ -21,7 +21,7 @@ const Signin = () => {
             const response = await axios.post("http://localhost:8080/api/usersignin", userObject);
             if (response.status === 200) {
                 localStorage.setItem("token", response.data.token);
-                props.history.push("/admin");
+                //props.history.push("/admin");
             }
             else return alert("The Username and Password entered are invalid. Please attempt again.");
         

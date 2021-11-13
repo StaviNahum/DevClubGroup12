@@ -22,6 +22,7 @@ export default function App() {
       let { status, data } = response;
       if (status === 200) {
         let userData = data;
+        return localStorage.setItem("userData", JSON.stringify(data));
       }
     })
     }, []);
