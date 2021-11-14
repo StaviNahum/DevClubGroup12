@@ -2,6 +2,8 @@ import React from "react";
 import axios from "axios";
 import { useState } from "react";
 
+const useStyles = makeStyles(styles);
+
 const Signup = () => {
     const [email, setEmail] = useState("");
     const [companyName, setCompanyName] = useState("");
