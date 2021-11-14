@@ -4,6 +4,7 @@ const bcrypt = require('bcrypt')
 const gUsers = require('../../db/user.json')
 const jwt = require("jsonwebtoken");
 var path = require('path');
+const { resolve } = require('path');
 
 
 const addUser = ({ company, email, username, firstName, lastName, city, country, password, postalCode, aboutMe }) => {
@@ -39,25 +40,55 @@ function _getUser(username) {
     }
 }
 
-function getProfile({_id, username}){
-    const user = gUsers.find(u=> u._id == _id)
+function _getUserByID(_id) {
+    return gUsers.find(u => u._id == _id)
+}
+
+function getProfile({ _id, username }) {
+    const user = _getUserByID(_id)
+    const cpyUser = { ...user }
     delete user.password
     delete user._id
     return user
 }
 
-
-
-
-module.exports = verifyToken;
-async function editUser({ company, email, username, firstName, lastName, city, country, password, postalCode, aboutMe, token }) {
-    try {
-        user c
+function editUser({ _id}, {company, email, username, firstName, lastName, city, country, password, postalCode, aboutMe }) {
+    const user = _getUserByID(_id)
+    const cUser = _getUser(username)
+    if (cUser && user._id != cUser._id)
+    {
+        return Promise.reject("Username already in use")
     }
-    catch (err) {
 
+    if (user) {
+        
+        const newUser = { ...user, company, email, username, firstName, lastName, city, country, password, postalCode, aboutMe }
+        const idx = gUsers.findIndex(u => u._id === _id)
+        gUsers[idx] = newUser
+        const token = jwt.sign(
+            {
+                userId: newUser._id,
+                username: newUser.username
+            },
+
+            process.env.JWT_KEY,
+            {
+                expiresIn: "1h"
+            }
+        );
+
+        return Promise.resolve({ message: "Edit successful", token })
     }
+    else {
+        return Promise.reject("Not found")
+    }
+
+
 }
+
+
+//async function 
+
 
 
 async function auth(username, password) {
@@ -88,7 +119,7 @@ async function auth(username, password) {
                 }
                 reject({ message: "Auth failed" })
             })
-        }).catch(err => reject({message: err}))
+        }).catch(err => reject({ message: err }))
     })
 }
 

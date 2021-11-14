@@ -1,3 +1,5 @@
+const jwt = require("jsonwebtoken");
+
 const { addUser, auth, getProfile } = require("./user-service");
 
 async function requireAuth(req, res, next) {
@@ -11,12 +13,6 @@ async function requireAuth(req, res, next) {
         //go to error handler
         next({ status: 401, message: "Auth failed!" })
     }
-}
-
-function errorhandler (err, req, res, next) {
-    if (err.status) res.status(err.status).end(err.message)
-    else
-        res.status(500).end(err)
 }
 
 async function signin(req, res) {
@@ -52,6 +48,18 @@ async function signout(req, res) {
     }
 }
 
+async function edit(req, res, next){
+    try {
+        console.log(req.body)
+        const {user} = req
+        const {properties} = req.body
+        const mess = await editUser(user, properties)
+        
+    } catch (error) {
+        res.status(404).send("Couldn't edit user")
+    }
+}
+
 async function profile(req, res){
     try{
         console.log(req.body);
@@ -73,5 +81,6 @@ module.exports = {
     signup,
     signout,
     requireAuth,
-    profile
+    profile,
+    edit
 }
