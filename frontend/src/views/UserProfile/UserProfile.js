@@ -69,8 +69,7 @@ export default function UserProfile() {
 
   const onEdit = async () => {
     let token = localStorage.getItem("token");
-    const res = await axios.patch("http://localhost:8080/api/user/edit", {
-      body: { properties: user },
+    const res = await axios.patch("http://localhost:8080/api/user/edit", { properties: user }, {
       headers:
         { "Authorization": `Bearer ${token}` },
     })

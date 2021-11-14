@@ -1,11 +1,10 @@
 const jwt = require("jsonwebtoken");
 
-const { addUser, auth, getProfile } = require("./user-service");
+const { addUser, auth, getProfile, editUser } = require("./user-service");
 
 
 async function requireAuth(req, res, next) {
     try {
-
         const token = req.headers.authorization.split(" ")[1]
         const decode = jwt.verify(token, process.env.JWT_KEY)
         req.user = decode;
@@ -49,22 +48,21 @@ async function signout(req, res) {
     }
 }
 
-async function edit(req, res, next){
+async function edit(req, res, next) {
     try {
-        console.log(req.body)
-        const {user} = req
-        const {properties} = req.body
-        const mess = await editUser(user, properties)
-        
+        const { user } = req
+        const { properties } = req.body
+        const response = await editUser(user, properties)
+        res.status(200).send(response)
     } catch (error) {
+        console.log(error);
         res.status(404).send("Couldn't edit user")
     }
 }
 
-async function profile(req, res){
-    try{
-        console.log(req.body);
-        const {user} = req
+async function profile(req, res) {
+    try {
+        const { user } = req
         const userProfile = await getProfile(user)
         res.send(userProfile)
     }

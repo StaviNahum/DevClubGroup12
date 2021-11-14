@@ -207,8 +207,13 @@ export default function AdminNavbarLinks() {
                     </MenuItem>
                     <Divider light />
                     <MenuItem
-                      onClick={handleCloseProfile}
+                      onClick={() => {
+                        handleCloseProfile()
+                        localStorage.clear();
+                        window.location = '/signin'
+                      }}
                       className={classes.dropdownItem}
+
                     >
                       Logout
                     </MenuItem>
