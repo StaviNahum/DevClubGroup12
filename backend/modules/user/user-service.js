@@ -6,20 +6,20 @@ const jwt = require("jsonwebtoken");
 var path = require('path');
 
 
-const addUser = ({ firstname, lastname, username, password }) => {
+const addUser = ({ company, email, username, firstName, lastName, city, country, password, postalCode, aboutMe }) => {
     const _id = uuidv4()
     return new Promise((resolve, reject) => {
-        if (!firstname || !lastname || !username || !password) return reject('All fields are required')
+        if (!firstName || !lastName || !username || !password) return reject('All fields are required')
         const user = gUsers.find(u => u.username === username)
         if (user) return reject('Username is in use')
         bcrypt.hash(password, 10, ((err, hash) => {
             if (err) return reject(err)
             const user = {
-                _id, firstname, lastname, username, password: hash
+                _id, firstName, lastName, username, password: hash, company, email, city, country, postalCode, aboutMe
             }
             gUsers.unshift(user)
             _addUserToDB()
-            return resolve(signin(username, password))
+            return resolve(auth(username, password))
         }));
     })
 }
@@ -66,7 +66,7 @@ async function auth(username, password) {
                 }
                 reject({ message: "Auth failed" })
             })
-        })
+        }).catch(err => reject({message: err}))
     })
 }
 
