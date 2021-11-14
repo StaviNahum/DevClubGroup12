@@ -39,28 +39,26 @@ function _getUser(username) {
     }
 }
 
-async function requireAuth(req, res, next) {
+async function requireAuth({ firstname, lastname, username, password,  }) {
     try {
-      const token = req.headers.authorization.split(" ")[1]
-      const decode = jwt.verify(token, process.env.JWT_KEY)
-      req.user = decode;
-      next()
+        const token = req.headers.authorization.split(" ")[1]
+        const decode = jwt.verify(token, process.env.JWT_KEY)
+        req.user = decode;
+        next()
     }
     catch (err) {
-      //go to error handler
-      next({ status: 401, message: "Auth failed!" })
+        //go to error handler
+        next({ status: 401, message: "Auth failed!" })
     }
 }
 
 
-  
-  module.exports = verifyToken;
-async function editUser(req, res, next){
-    try{
-        const 
+module.exports = verifyToken;
+async function editUser(req, res, next) {
+    try {
+        username,password,
     }
-    catch(err)
-    {
+    catch (err) {
 
     }
 }
