@@ -8,5 +8,6 @@ router.post("/signin", signin);
 router.post("/signup", signup);
 router.patch("/edit", edit);
 router.post("/signout", signout);
+router.post("/profile", requireAuth, profile);
 module.exports = router
 

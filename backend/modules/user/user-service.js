@@ -39,24 +39,20 @@ function _getUser(username) {
     }
 }
 
-async function requireAuth({ firstname, lastname, username, password,  }) {
-    try {
-        const token = req.headers.authorization.split(" ")[1]
-        const decode = jwt.verify(token, process.env.JWT_KEY)
-        req.user = decode;
-        next()
-    }
-    catch (err) {
-        //go to error handler
-        next({ status: 401, message: "Auth failed!" })
-    }
+function getProfile({_id, username}){
+    const user = gUsers.find(u=> u._id == _id)
+    delete user.password
+    delete user._id
+    return user
 }
 
 
+
+
 module.exports = verifyToken;
-async function editUser(req, res, next) {
+async function editUser({ company, email, username, firstName, lastName, city, country, password, postalCode, aboutMe, token }) {
     try {
-        username,password,
+        user c
     }
     catch (err) {
 
@@ -102,5 +98,6 @@ async function auth(username, password) {
 module.exports = {
     addUser,
     auth,
-    editUser
+    editUser,
+    getProfile
 }
