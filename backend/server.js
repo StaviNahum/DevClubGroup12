@@ -3,7 +3,7 @@ const cors = require('cors');
 
 if (process.env.NODE_ENV !== 'production') {
     require('dotenv').config();
-    
+
 } const app = express();
 app.use(express.json());
 app.use(cors());
@@ -11,7 +11,12 @@ app.use(cors());
 app.get('/example', (req, res) => {
     res.send('hi from the server')
 })
-
+app.use((err, req, res, next) => {
+    if (err.status) res.status(err.status).end(err.message)
+    else
+        res.status(500).end(err)
+}
+)
 const userRoutes = require('./modules/user/user-routes')
 app.use('/api/user', userRoutes)
 

@@ -1,7 +1,10 @@
 const { addUser, auth, getProfile } = require("./user-service");
+const jwt = require("jsonwebtoken");
+
 
 async function requireAuth(req, res, next) {
     try {
+
         const token = req.headers.authorization.split(" ")[1]
         const decode = jwt.verify(token, process.env.JWT_KEY)
         req.user = decode;
@@ -13,11 +16,7 @@ async function requireAuth(req, res, next) {
     }
 }
 
-function errorhandler (err, req, res, next) {
-    if (err.status) res.status(err.status).end(err.message)
-    else
-        res.status(500).end(err)
-}
+
 
 async function signin(req, res) {
     try {
@@ -35,16 +34,13 @@ async function signup(req, res) {
         res.status(201).json(user)
     }
     catch (err) {
-        console.log(err);
         res.status(500).send(err)
     }
 }
 
 async function signout(req, res) {
     try {
-        console.log(req.body);
         const mess = await auth(req.body.username)
-        console.log(mess)
         res.status(201).send(mess)
     }
     catch {
@@ -52,16 +48,13 @@ async function signout(req, res) {
     }
 }
 
-async function profile(req, res){
-    try{
-        console.log(req.body);
-        const {user} = req
+async function profile(req, res) {
+    try {
+        const { user } = req
         const userProfile = await getProfile(user)
         res.send(userProfile)
     }
-
-    catch(err)
-    {
+    catch (err) {
         res.status(404).send("User not found")
     }
 }

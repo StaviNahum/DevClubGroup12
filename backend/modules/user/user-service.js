@@ -39,24 +39,31 @@ function _getUser(username) {
     }
 }
 
-function getProfile({_id, username}){
-    const user = gUsers.find(u=> u._id == _id)
-    delete user.password
-    delete user._id
-    return user
+function getProfile({ userId }) {
+    const user = gUsers.find(u => {
+        return u._id == userId
+    }
+    )
+    const cpyUser = { ...user }
+    if (cpyUser) {
+        delete cpyUser.password
+        delete cpyUser._id
+        return Promise.resolve(cpyUser)
+    }
+    else return Promise.reject("Couldn\'t find user")
 }
 
 
 
 
-module.exports = verifyToken;
+// module.exports = verifyToken;
 async function editUser({ company, email, username, firstName, lastName, city, country, password, postalCode, aboutMe, token }) {
-    try {
-        user c
-    }
-    catch (err) {
+    // try {
+    //     user c
+    // }
+    // catch (err) {
 
-    }
+    // }
 }
 
 
@@ -88,7 +95,7 @@ async function auth(username, password) {
                 }
                 reject({ message: "Auth failed" })
             })
-        }).catch(err => reject({message: err}))
+        }).catch(err => reject({ message: err }))
     })
 }
 

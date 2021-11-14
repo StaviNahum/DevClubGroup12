@@ -54,14 +54,30 @@ export default function UserProfile() {
     const getUser = async () => {
       if (!localStorage.getItem("token")) window.location = '/signin';
       let token = localStorage.getItem("token");
-      const res = await axios.get("http://localhost:8080/api/edit", {
-        headers:
-          { "Authorization": `Bearer ${token}` },
-      })
-      setUser(res.data.user)
+      try {
+        const res = await axios.get("http://localhost:8080/api/user/profile", {
+          headers:
+            { "Authorization": `Bearer ${token}` },
+        })
+        setUser(res.data)
+      }
+      catch (err) {
+      }
     }
     getUser()
   }, []);
+
+  const onEdit = async () => {
+    let token = localStorage.getItem("token");
+    const res = await axios.patch("http://localhost:8080/api/user/edit", {
+      body: { properties: user },
+      headers:
+        { "Authorization": `Bearer ${token}` },
+    })
+    localStorage.setItem("token", res.data.token);
+
+  }
+
   const classes = useStyles();
 
   return (user &&
@@ -205,7 +221,7 @@ export default function UserProfile() {
               </GridContainer>
             </CardBody>
             <CardFooter>
-              <Button color="primary" onClick={() => { console.log(user) }}>Update Profile</Button>
+              <Button color="primary" onClick={() => onEdit()}>Update Profile</Button>
             </CardFooter>
           </Card>
         </GridItem>
