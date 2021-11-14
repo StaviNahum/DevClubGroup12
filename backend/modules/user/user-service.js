@@ -40,10 +40,7 @@ function _getUser(username) {
 }
 
 function getProfile({ userId }) {
-    const user = gUsers.find(u => {
-        return u._id == userId
-    }
-    )
+    const user = _getUserByID(userId)
     const cpyUser = { ...user }
     if (cpyUser) {
         delete cpyUser.password
@@ -51,21 +48,39 @@ function getProfile({ userId }) {
         return Promise.resolve(cpyUser)
     }
     else return Promise.reject("Couldn\'t find user")
+
+}
+function _getUserByID(_id) {
+    return gUsers.find(u => u._id == _id)
 }
 
 
+function editUser({ _id }, { company, email, username, firstName, lastName, city, country, password, postalCode, aboutMe }) {
+    const user = _getUserByID(_id)
+    const cUser = _getUser(username)
+    if (cUser && user._id != cUser._id) {
+        return Promise.reject("Username already in use")
+    }
+    if (user) {
+        const newUser = { ...user, company, email, username, firstName, lastName, city, country, password, postalCode, aboutMe }
+        const idx = gUsers.findIndex(u => u._id === _id)
+        gUsers[idx] = newUser
+        const token = jwt.sign(
+            {
+                userId: newUser._id,
+                username: newUser.username
+            },
 
+            process.env.JWT_KEY,
+            {
+                expiresIn: "1h"
+            }
+        );
 
-// module.exports = verifyToken;
-async function editUser({ company, email, username, firstName, lastName, city, country, password, postalCode, aboutMe, token }) {
-    // try {
-    //     user c
-    // }
-    // catch (err) {
-
-    // }
+        return Promise.resolve({ message: "Edit successful", token })
+    }
+    else return Promise.reject("Not found")
 }
-
 
 async function auth(username, password) {
     return new Promise((resolve, reject) => {

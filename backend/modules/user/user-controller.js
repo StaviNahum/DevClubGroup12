@@ -1,5 +1,6 @@
-const { addUser, auth, getProfile } = require("./user-service");
 const jwt = require("jsonwebtoken");
+
+const { addUser, auth, getProfile } = require("./user-service");
 
 
 async function requireAuth(req, res, next) {
@@ -48,9 +49,22 @@ async function signout(req, res) {
     }
 }
 
-async function profile(req, res) {
+async function edit(req, res, next){
     try {
-        const { user } = req
+        console.log(req.body)
+        const {user} = req
+        const {properties} = req.body
+        const mess = await editUser(user, properties)
+        
+    } catch (error) {
+        res.status(404).send("Couldn't edit user")
+    }
+}
+
+async function profile(req, res){
+    try{
+        console.log(req.body);
+        const {user} = req
         const userProfile = await getProfile(user)
         res.send(userProfile)
     }
@@ -66,5 +80,6 @@ module.exports = {
     signup,
     signout,
     requireAuth,
-    profile
+    profile,
+    edit
 }
