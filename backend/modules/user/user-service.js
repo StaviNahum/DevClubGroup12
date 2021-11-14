@@ -19,7 +19,7 @@ const addUser = ({ firstname, lastname, username, password }) => {
             }
             gUsers.unshift(user)
             _addUserToDB()
-            return resolve(signin(username, password))
+            return resolve(auth(username, password))
         }));
     })
 }
@@ -39,6 +39,33 @@ function _getUser(username) {
     }
 }
 
+async function requireAuth(req, res, next) {
+    try {
+      const token = req.headers.authorization.split(" ")[1]
+      const decode = jwt.verify(token, process.env.JWT_KEY)
+      req.user = decode;
+      next()
+    }
+    catch (err) {
+      //go to error handler
+      next({ status: 401, message: "Auth failed!" })
+    }
+}
+
+
+  
+  module.exports = verifyToken;
+async function editUser(req, res, next){
+    try{
+        const 
+    }
+    catch(err)
+    {
+
+    }
+}
+
+
 async function auth(username, password) {
     return new Promise((resolve, reject) => {
         _getUser(username).then(result => {
@@ -46,9 +73,10 @@ async function auth(username, password) {
                 if (res) {
                     const token = jwt.sign(
                         {
-                            username: result.username,
-                            userId: result._id
+                            userId: result._id,
+                            username: result.username
                         },
+
                         process.env.JWT_KEY,
                         {
                             expiresIn: "1h"
@@ -61,7 +89,7 @@ async function auth(username, password) {
                 }
                 if (err) {
                     reject({
-                        message: "Auth failed"
+                        message: "Wrong password!"
                     })
                 }
                 reject({ message: "Auth failed" })
@@ -76,5 +104,6 @@ async function auth(username, password) {
 
 module.exports = {
     addUser,
-    auth
+    auth,
+    editUser
 }

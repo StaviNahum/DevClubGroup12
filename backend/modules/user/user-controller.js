@@ -26,6 +26,15 @@ async function signup(req, res) {
 }
 
 async function signout(req, res) {
+    try {
+        console.log(req.body);
+        const mess = await auth(req.body.username)
+        console.log(mess)
+        res.status(201).send(mess)
+    }
+    catch {
+
+    }
 }
 
 
@@ -35,4 +44,3 @@ module.exports = {
     signup,
     signout
 }
-
